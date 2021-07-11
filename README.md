@@ -1,2 +1,3 @@
-# bienvenides
-Bienvenidəs a Thoughtworks España!
+# ¡Bienvenidəs!
+
+Este proyecto da una pequeña bienvenida para los nuevos miembros de ThoughtWorks España.
