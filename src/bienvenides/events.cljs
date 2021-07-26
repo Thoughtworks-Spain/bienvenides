@@ -16,14 +16,21 @@
 (re-frame/reg-cofx
    :hash-fragment
    (fn [coeffects _]
-      (assoc coeffects :hash-fragment (js/window.location.hash))))
+      (assoc coeffects :hash-fragment js/window.location.hash)))
 
-(re-frame/reg-event-db
+(re-frame/reg-event-fx
   ::initialize-db
-  [re-frame/inject-cofx]
-  initialize-db)
+  [(re-frame/inject-cofx :hash-fragment)]
+  (fn [cofx event] {:db (initialize-db cofx event)}))
 
-(re-frame/reg-event-db
+(re-frame/reg-fx
+  :log
+  (fn [value]
+    (js/console.log value)))
+
+(defn play [_ _]
+  {:log "Played!"})
+
+(re-frame/reg-event-fx
   ::play
-  (fn [_ _]
-    (js/console.log "Played!")))
+  play)
