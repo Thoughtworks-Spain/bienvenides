@@ -5,15 +5,19 @@
 
 (deftest initializes-to-empty
   (is (= {:name []}
-         (events/initialize-db {:hash-fragment nil} nil))))
+         (events/initialize-name {:hash-fragment nil} nil))))
 
 (deftest splits-hash-fragment
   (is (= {:name ["Foo" "Bar"]}
-         (events/initialize-db {:hash-fragment "#Foo%20Bar"} nil))))
+         (events/initialize-name {:hash-fragment "#Foo%20Bar"} nil))))
 
 (deftest ignores-extra-spaces
   (is (= {:name ["Foo" "Bar"]}
-         (events/initialize-db {:hash-fragment "#Foo%20%20Bar%20"} nil))))
+         (events/initialize-name {:hash-fragment "#Foo%20%20Bar%20"} nil))))
+
+(deftest initializes-audio-context
+  (is (= {:audio-context :foo}
+         (events/initialize-audio-context {:audio-context :foo} nil))))
 
 (deftest plays-a-log-message
   (is (= {:log "Played!"}

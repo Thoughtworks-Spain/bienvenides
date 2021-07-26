@@ -2,9 +2,10 @@
   (:require
    [re-frame.core :as re-frame]
    [bienvenides.db :as db]
-   [clojure.string :as str]))
+   [clojure.string :as str]
+   [bienvenides.synth :as synth]))
 
-(defn initialize-db [cofx event]
+(defn initialize-name [cofx event]
     (let [raw (if-let [hash (:hash-fragment cofx)]
                 (subs hash 1)
                 "")
@@ -18,10 +19,22 @@
    (fn [coeffects _]
       (assoc coeffects :hash-fragment js/window.location.hash)))
 
+(defn initialize-audio-context [cofx event]
+    (let [audio-context (:audio-context cofx)]
+      (-> {:audio-context audio-context})))
+
+(re-frame/reg-fx
+  :audio-context
+  synth/audio-context)
+
 (re-frame/reg-event-fx
   ::initialize-db
-  [(re-frame/inject-cofx :hash-fragment)]
-  (fn [cofx event] {:db (initialize-db cofx event)}))
+  [(re-frame/inject-cofx :hash-fragment)
+   (re-frame/inject-cofx :audio-context)]
+  (fn [cofx event]
+    {:db (merge
+           (initialize-name cofx event)
+           (initialize-audio-context cofx event))}))
 
 (re-frame/reg-fx
   :log
