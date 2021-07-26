@@ -8,5 +8,5 @@
   (let [name (re-frame/subscribe [::subs/name])]
     [:div
      [:h1
-      "Hello from " @name]
+      "Bienvenides " (@name 0)]
      ]))
