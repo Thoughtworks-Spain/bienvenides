@@ -13,3 +13,8 @@
           name (str/split raw #"%20")]
       (-> db/default-db
           (assoc :name name)))))
+
+(re-frame/reg-event-db
+  ::play
+  (fn [_ _]
+    (js/console.log "Played!")))
