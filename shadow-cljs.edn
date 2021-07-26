@@ -26,4 +26,8 @@
    :dev
    {:compiler-options
     {:closure-defines
-     { }}}}}}
+     { }}}}
+ :test
+  {:target :karma
+   :output-to "target/karma-test.js"
+   :ns-regexp "-test$"}}}

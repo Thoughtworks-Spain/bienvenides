@@ -1,0 +1,3 @@
+#!/bin/sh
+npx shadow-cljs compile test
+npx karma start --single-run
