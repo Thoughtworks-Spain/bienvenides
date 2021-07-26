@@ -1,8 +1,12 @@
 (ns bienvenides.events-test
-  (:require [cljs.test :refer [deftest is]]))
+  (:require
+    [cljs.test :refer [deftest is]]
+    [bienvenides.events :as events]))
 
-(deftest square-test
-  (is (= 4 (* 2 2))))
+(deftest initializes-to-empty
+  (is (= {:name []}
+         (events/initialize-db {:hash-fragment nil} nil))))
 
-(deftest failing-test
-  (is (= 0 1)))
+(deftest splits-hash-fragment
+  (is (= {:name ["Foo" "Bar"]}
+         (events/initialize-db {:hash-fragment "#Foo%20Bar"} nil))))
