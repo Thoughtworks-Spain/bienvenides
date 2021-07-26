@@ -10,3 +10,7 @@
 (deftest splits-hash-fragment
   (is (= {:name ["Foo" "Bar"]}
          (events/initialize-db {:hash-fragment "#Foo%20Bar"} nil))))
+
+(deftest ignores-extra-spaces
+  (is (= {:name ["Foo" "Bar"]}
+         (events/initialize-db {:hash-fragment "#Foo%20%20Bar%20"} nil))))
