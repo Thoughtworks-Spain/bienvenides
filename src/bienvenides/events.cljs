@@ -2,6 +2,7 @@
   (:require
    [re-frame.core :as re-frame]
    [bienvenides.db :as db]
+   [bienvenides.encoding :as encoding]
    [clojure.string :as str]
    [bienvenides.synth :as synth]
    [leipzig.melody :as melody]))
@@ -44,7 +45,7 @@
     (synth/play notes audio-context)))
 
 (defn play [cofx event]
-  {:play {:notes (melody/phrase [1] [0])
+  {:play {:notes (-> cofx :db :name encoding/encode)
           :audio-context (-> cofx :db :audio-context)}})
 
 (re-frame/reg-event-fx

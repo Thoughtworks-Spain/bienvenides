@@ -19,7 +19,10 @@
   (is (= :foo
          (events/initialize-audio-context {:audio-context :foo} nil))))
 
-(deftest plays-a-log-message
-  (is (= {:play {:notes [{:duration 1 :pitch 0 :time 0}]
+(deftest plays-the-name
+  (is (= {:play {:notes [{:pitch 0 :time 0 :duration 1}
+                         {:pitch 2 :time 1 :duration 1}
+                         {:pitch 4 :time 2 :duration 1}]
                  :audio-context 'TheContext}}
-         (events/play {:db {:audio-context 'TheContext}} nil))))
+         (events/play {:db {:audio-context 'TheContext
+                            :name ["ace"]}} nil))))
