@@ -10,8 +10,16 @@
       (map index)
       (map #(mod % 5)))))
 
+(defn is-vowel? [letter]
+  (#{\a \e \i \o \u} letter))
+
+(defn encode-one-duration [letter]
+  (if (is-vowel? letter)
+    1
+    0.5))
+
 (defn encode-duration [persons-name]
-  (map (constantly 1) persons-name))
+  (map encode-one-duration persons-name))
 
 (defn encode-one [persons-name]
   (let [pitches (encode-pitch persons-name)
