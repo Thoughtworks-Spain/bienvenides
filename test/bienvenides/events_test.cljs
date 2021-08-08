@@ -4,21 +4,22 @@
     [bienvenides.events :as events]))
 
 (deftest initializes-to-empty
-  (is (= {:name []}
+  (is (= []
          (events/initialize-name {:hash-fragment nil} nil))))
 
 (deftest splits-hash-fragment
-  (is (= {:name ["Foo" "Bar"]}
+  (is (= ["Foo" "Bar"]
          (events/initialize-name {:hash-fragment "#Foo%20Bar"} nil))))
 
 (deftest ignores-extra-spaces
-  (is (= {:name ["Foo" "Bar"]}
+  (is (= ["Foo" "Bar"]
          (events/initialize-name {:hash-fragment "#Foo%20%20Bar%20"} nil))))
 
 (deftest initializes-audio-context
-  (is (= {:audio-context :foo}
+  (is (= :foo
          (events/initialize-audio-context {:audio-context :foo} nil))))
 
 (deftest plays-a-log-message
-  (is (= {:log "Played!"}
+  (is (= {:play {:notes [{:duration 1 :pitch 0 :time 0}]
+                 :audio-context nil}}
          (events/play {:hash-fragment "#Foo%20%20Bar%20"} nil))))

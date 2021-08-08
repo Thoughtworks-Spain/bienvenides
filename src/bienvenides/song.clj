@@ -52,8 +52,9 @@
 ; Composition
 (def track
   (let [tune (->>
+               (string/split "Cristina Copete" #" ")
                ;(string/split "Jorge Agudo Praena" #" ")
-               (string/split "Christopher Thomas Ford" #" ")
+               ;(string/split "Christopher Thomas Ford" #" ")
                ;(string/split "Florence Ivy June Adlem" #" ")
                ;(string/split "Cristobal Garcia Garcia" #" ")
                ;(string/split "Jennifer Louise Adlem" #" ")

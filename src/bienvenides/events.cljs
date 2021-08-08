@@ -3,29 +3,31 @@
    [re-frame.core :as re-frame]
    [bienvenides.db :as db]
    [clojure.string :as str]
-   [bienvenides.synth :as synth]))
+   [bienvenides.synth :as synth]
+   [leipzig.melody :as melody]))
 
 (defn initialize-name [cofx event]
-    (let [raw (if-let [hash (:hash-fragment cofx)]
-                (subs hash 1)
-                "")
-          name (->> (str/split raw #"%20")
-                    (filter (partial not= "")))]
-      (-> db/default-db
-          (assoc :name name))))
+  (let [raw (if-let [hash (:hash-fragment cofx)]
+              (subs hash 1)
+              "")]
+    (->> (str/split raw #"%20")
+         (filter (partial not= "")))))
 
 (re-frame/reg-cofx
    :hash-fragment
-   (fn [coeffects _]
-      (assoc coeffects :hash-fragment js/window.location.hash)))
+   (fn [cofx _]
+      (-> cofx
+          (assoc :hash-fragment js/window.location.hash))))
 
 (defn initialize-audio-context [cofx event]
-    (let [audio-context (:audio-context cofx)]
-      (-> {:audio-context audio-context})))
+  (let [audio-context (:audio-context cofx)]
+    audio-context))
 
-(re-frame/reg-fx
+(re-frame/reg-cofx
   :audio-context
-  synth/audio-context)
+  (fn [cofx _]
+    (-> cofx
+        (assoc :audio-context (synth/audio-context)))))
 
 (re-frame/reg-event-fx
   ::initialize-db
@@ -33,16 +35,17 @@
    (re-frame/inject-cofx :audio-context)]
   (fn [cofx event]
     {:db (merge
-           (initialize-name cofx event)
-           (initialize-audio-context cofx event))}))
+           {:name (initialize-name cofx event)}
+           {:audio-context (initialize-audio-context cofx event)})}))
 
 (re-frame/reg-fx
-  :log
-  (fn [value]
-    (js/console.log value)))
+  :play
+  (fn [{notes :notes audio-context :audio-context}]
+    (synth/play notes audio-context)))
 
-(defn play [_ _]
-  {:log "Played!"})
+(defn play [cofx event]
+  {:play {:notes (melody/phrase [1] [0])
+          :audio-context (-> cofx :db :audio-context)}})
 
 (re-frame/reg-event-fx
   ::play
