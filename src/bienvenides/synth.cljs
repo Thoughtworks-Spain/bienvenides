@@ -1,6 +1,9 @@
 (ns bienvenides.synth
   (:require
-   [cljs-bach.synthesis :as cljb]))
+   [cljs-bach.synthesis :as cljb]
+   [leipzig.temperament :as temperament]
+   [leipzig.melody :as melody]
+   [leipzig.scale :as scale]))
 
 (defn audio-context []
   (cljb/audio-context))
@@ -11,7 +14,12 @@
     (cljb/percussive 0.01 0.4)
     (cljb/gain 0.1)))
 
+(defn in-key [notes]
+  (->> notes
+       (melody/where :pitch (comp temperament/equal scale/A scale/major))))
+
 (defn play [notes audio-context]
-  (-> (ping 440)
-      (cljb/connect-> cljb/destination)
-      (cljb/run-with audio-context (cljb/current-time audio-context) 1.0)))
+  (doseq [{:keys [pitch time duration] :as note} (->> notes in-key)]
+    (let [connected (cljb/connect-> (ping pitch) cljb/destination)
+          at (+ time (cljb/current-time audio-context))]
+      (cljb/run-with connected audio-context at duration))))

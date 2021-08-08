@@ -2,8 +2,7 @@
   (:require [leipzig.melody :as melody]
             [leipzig.scale :as scale]
             [clojure.string :as str]
-            [cljs.pprint :as pprint]
-            ))
+            [cljs.pprint :as pprint]))
 
 (defn encode-pitch [persons-name]
   (letfn [(index [c] (- (pprint/char-code c) (pprint/char-code \a)))]

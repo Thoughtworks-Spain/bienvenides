@@ -17,8 +17,10 @@
 (re-frame/reg-cofx
    :hash-fragment
    (fn [cofx _]
-      (-> cofx
-          (assoc :hash-fragment js/window.location.hash))))
+      (let [raw js/window.location.hash
+            processed (if (empty? raw) "#Anon" raw)]
+        (-> cofx
+          (assoc :hash-fragment processed)))))
 
 (defn initialize-audio-context [cofx event]
   (let [audio-context (:audio-context cofx)]
@@ -41,7 +43,7 @@
 
 (re-frame/reg-fx
   :play
-  (fn [{notes :notes audio-context :audio-context}]
+  (fn [{notes :notes audio-context :audio-context :as all}]
     (synth/play notes audio-context)))
 
 (defn play [cofx event]
