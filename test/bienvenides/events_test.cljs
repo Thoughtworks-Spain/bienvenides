@@ -21,5 +21,5 @@
 
 (deftest plays-a-log-message
   (is (= {:play {:notes [{:duration 1 :pitch 0 :time 0}]
-                 :audio-context nil}}
-         (events/play {:hash-fragment "#Foo%20%20Bar%20"} nil))))
+                 :audio-context 'TheContext}}
+         (events/play {:db {:audio-context 'TheContext}} nil))))
