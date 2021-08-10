@@ -6,6 +6,14 @@ It's built with [ClojureScript](https://clojurescript.org/) and [re-frame](https
 
 ## Getting Started
 
+### Trying it out
+
+The app turns a name into a musical signature. To try it out:
+- Use `npx shadow-cljs watch app` to start the app.
+- Load the page in your browser, with a name in the hash fragment e.g. `http://localhost:8280/#Christopher%20Ford`
+- Reload the page (currently the app doesn't listen to hash fragment changes)
+- Press *Play*
+
 ### Project Overview
 
 * Architecture:
