@@ -7,10 +7,8 @@
    [bienvenides.synth :as synth]
    [leipzig.melody :as melody]))
 
-(defn initialize-name [cofx event]
-  (let [raw (if-let [hash (:hash-fragment cofx)]
-              (subs hash 1)
-              "")]
+(defn hash->name [hash]
+  (let [raw (if hash (subs hash 1) "")]
     (->> (str/split raw #"%20")
          (filter (partial not= "")))))
 
@@ -38,8 +36,9 @@
    (re-frame/inject-cofx :audio-context)]
   (fn [cofx event]
     {:db (merge
-           {:name (initialize-name cofx event)}
-           {:audio-context (initialize-audio-context cofx event)})}))
+          (:db cofx)
+          {:name (-> cofx :hash-fragment hash->name)}
+          {:audio-context (initialize-audio-context cofx event)})}))
 
 (re-frame/reg-fx
   :play
