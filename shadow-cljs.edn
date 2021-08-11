@@ -10,6 +10,7 @@
   [leipzig "0.11.0-SNAPSHOT"]
   [cljs-bach "0.3.0-SNAPSHOT"]
 
+  [cider/cider-nrepl "0.26.0"]
   [binaryage/devtools "1.0.3"]]
 
  :dev-http
