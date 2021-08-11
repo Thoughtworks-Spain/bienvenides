@@ -25,7 +25,7 @@
    :modules
    {:app {:init-fn bienvenides.core/init}}
    :devtools
-   {:preloads []}
+   {:preloads [bienvenides.dev]}
    :dev
    {:compiler-options
     {:closure-defines

@@ -4,13 +4,7 @@
    [re-frame.core :as re-frame]
    [bienvenides.events :as events]
    [bienvenides.views :as views]
-   [bienvenides.config :as config]
    ))
-
-
-(defn dev-setup []
-  (when config/debug?
-    (println "dev mode")))
 
 (defn ^:dev/after-load mount-root []
   (re-frame/clear-subscription-cache!)
@@ -27,6 +21,5 @@
 (defn init []
   (re-frame/dispatch-sync [::events/initialize-db])
   (re-frame/dispatch-sync [::events/update-hash js/location.hash])
-  (dev-setup)
   (mount-root)
   (register-hash-change-listener!))
