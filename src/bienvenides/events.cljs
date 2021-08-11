@@ -50,6 +50,11 @@
   {:play {:notes (-> cofx :db :name encoding/encode)
           :audio-context (-> cofx :db :audio-context)}})
 
-(re-frame/reg-event-fx
-  ::play
-  play)
+(defn update-hash [{db :db} [_ val]]
+  (let [parsed-hash (if (empty? val) "#Anon" val)]
+    {:db (merge
+          db
+          {:hash parsed-hash})}))
+
+(re-frame/reg-event-fx ::update-hash update-hash)
+(re-frame/reg-event-fx ::play play)

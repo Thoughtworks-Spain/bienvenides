@@ -18,7 +18,15 @@
     (rdom/unmount-component-at-node root-el)
     (rdom/render [views/main-panel] root-el)))
 
+(defn register-hash-change-listener!
+  "Watches the hash on the url so we can update the re-frame db accordingly"
+  []
+  (letfn [(on-hashchange [_] (re-frame/dispatch-sync [::events/update-hash js/location.hash]))]
+    (js/window.addEventListener "hashchange" on-hashchange)))
+
 (defn init []
   (re-frame/dispatch-sync [::events/initialize-db])
+  (re-frame/dispatch-sync [::events/update-hash js/location.hash])
   (dev-setup)
-  (mount-root))
+  (mount-root)
+  (register-hash-change-listener!))
