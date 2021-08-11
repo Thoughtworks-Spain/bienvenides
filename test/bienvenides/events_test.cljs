@@ -3,18 +3,6 @@
     [cljs.test :refer [deftest is]]
     [bienvenides.events :as events]))
 
-(deftest initializes-to-empty
-  (is (= []
-         (events/hash->name nil))))
-
-(deftest splits-hash-fragment
-  (is (= ["Foo" "Bar"]
-         (events/hash->name "#Foo%20Bar"))))
-
-(deftest ignores-extra-spaces
-  (is (= ["Foo" "Bar"]
-         (events/hash->name "#Foo%20%20Bar%20"))))
-
 (deftest initializes-audio-context
   (is (= :foo
          (events/initialize-audio-context {:audio-context :foo} nil))))

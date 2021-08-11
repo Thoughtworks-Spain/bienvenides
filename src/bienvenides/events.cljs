@@ -3,14 +3,9 @@
    [re-frame.core :as re-frame]
    [bienvenides.db :as db]
    [bienvenides.encoding :as encoding]
-   [clojure.string :as str]
    [bienvenides.synth :as synth]
+   [bienvenides.utils :as utils]
    [leipzig.melody :as melody]))
-
-(defn hash->name [hash]
-  (let [raw (if hash (subs hash 1) "")]
-    (->> (str/split raw #"%20")
-         (filter (partial not= "")))))
 
 (re-frame/reg-cofx
    :hash-fragment
@@ -37,7 +32,7 @@
   (fn [cofx event]
     {:db (merge
           (:db cofx)
-          {:name (-> cofx :hash-fragment hash->name)}
+          {:name (-> cofx :hash-fragment utils/hash->name)}
           {:audio-context (initialize-audio-context cofx event)})}))
 
 (re-frame/reg-fx
