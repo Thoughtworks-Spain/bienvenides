@@ -1,0 +1,28 @@
+runs:
+  using: "composite"
+  steps: 
+      - name: Installs lein
+        shell: bash
+        run: >
+          mkdir ~/bin &&
+          curl -L -o ~/bin/lein 'https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein' && 
+          chmod a+x ~/bin/lein && 
+          ~/bin/lein
+      - name: Installs cljs-bach
+        shell: bash
+        run: >
+          mkdir -p ~/git/cljs-bach && 
+          git clone 'https://github.com/ctford/cljs-bach.git' ~/git/cljs-bach &&
+          pushd ~/git/cljs-bach &&
+          git reset --hard 50e462e &&
+          ~/bin/lein install &&
+          popd
+      - name: Installs leipzig
+        shell: bash
+        run: >
+          mkdir -p ~/git/leipzig && 
+          git clone 'https://github.com/ctford/leipzig.git' ~/git/leipzig &&
+          pushd ~/git/leipzig &&
+          git reset --hard 8d3243e &&
+          ~/bin/lein install &&
+          popd
