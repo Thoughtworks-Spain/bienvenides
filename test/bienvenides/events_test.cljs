@@ -18,4 +18,5 @@
                          {:pitch 4 :time 1.5 :duration 1}]
                  :audio-context 'TheContext}}
          (events/play {:db {:audio-context 'TheContext
-                            :name ["ace"]}} nil))))
+                            :hash "#ace"}}
+                      nil))))

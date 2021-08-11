@@ -1,7 +1,6 @@
 (ns bienvenides.events
   (:require
    [re-frame.core :as re-frame]
-   [bienvenides.db :as db]
    [bienvenides.encoding :as encoding]
    [bienvenides.synth :as synth]
    [bienvenides.utils :as utils]
@@ -32,7 +31,6 @@
   (fn [cofx event]
     {:db (merge
           (:db cofx)
-          {:name (-> cofx :hash-fragment utils/hash->name)}
           {:audio-context (initialize-audio-context cofx event)})}))
 
 (re-frame/reg-fx
@@ -41,7 +39,7 @@
     (synth/play notes audio-context)))
 
 (defn play [cofx event]
-  {:play {:notes (-> cofx :db :name encoding/encode)
+  {:play {:notes (-> cofx :db :hash utils/hash->name encoding/encode)
           :audio-context (-> cofx :db :audio-context)}})
 
 (defn update-hash [{db :db} [_ val]]
