@@ -6,7 +6,7 @@
   (is (= []
          (sut/hash->name nil))))
 
-(deftest splits-hash-fragment
+(deftest splits-hash
   (is (= ["Foo" "Bar"]
          (sut/hash->name "#Foo%20Bar"))))
 

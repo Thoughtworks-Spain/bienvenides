@@ -6,14 +6,6 @@
    [bienvenides.utils :as utils]
    [leipzig.melody :as melody]))
 
-(re-frame/reg-cofx
-   :hash-fragment
-   (fn [cofx _]
-      (let [raw js/window.location.hash
-            processed (if (empty? raw) "#Anon" raw)]
-        (-> cofx
-          (assoc :hash-fragment processed)))))
-
 (defn initialize-audio-context [cofx event]
   (let [audio-context (:audio-context cofx)]
     audio-context))
@@ -26,8 +18,7 @@
 
 (re-frame/reg-event-fx
   ::initialize-db
-  [(re-frame/inject-cofx :hash-fragment)
-   (re-frame/inject-cofx :audio-context)]
+  [(re-frame/inject-cofx :audio-context)]
   (fn [cofx event]
     {:db (merge
           (:db cofx)
