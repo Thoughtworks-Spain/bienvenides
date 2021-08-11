@@ -4,6 +4,28 @@ jobs:
   Run-Tests:
     runs-on: ubuntu-latest
     steps:
+      - name: Installs lein
+        run: >
+          mkdir ~/bin &&
+          curl -L -o ~/bin/lein 'https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein' && 
+          chmod a+x ~/bin/lein && 
+          ~/bin/lein
+      - name: Installs cljs-bach
+        run: >
+          mkdir -p ~/git/cljs-bach && 
+          git clone 'https://github.com/ctford/cljs-bach.git' ~/git/cljs-bach &&
+          pushd ~/git/cljs-bach &&
+          git reset --hard 50e462e &&
+          ~/bin/lein install &&
+          popd
+      - name: Installs leipzig
+        run: >
+          mkdir -p ~/git/leipzig && 
+          git clone 'https://github.com/ctford/leipzig.git' ~/git/leipzig &&
+          pushd ~/git/leipzig &&
+          git reset --hard 8d3243e &&
+          ~/bin/lein install &&
+          popd
       - name: Check out repository code
         uses: actions/checkout@v2
       - name: Install dependencies
