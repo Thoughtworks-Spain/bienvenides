@@ -1,6 +1,7 @@
 name: Run tests
 on: [push]
 jobs:
+
   Run-Tests:
     runs-on: ubuntu-latest
     steps:
@@ -28,3 +29,28 @@ jobs:
         run: npm ci
       - name: Releases app
         run: npx shadow-cljs release app
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: app-release
+          path: ./resources/public/
+
+  Deploy-To-Github-Pages:
+    needs:
+      - Creates-App-Release-Artifact
+      - Run-Tests
+    if: ${{ github.ref == 'refs/heads/main' || github.ref == 'refs/heads/trying-github-pages' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v2
+      - name: Downloads Artifcats
+        uses: actions/download-artifact@v2
+        with:
+          name: app-release
+          path: ./resources/public/
+      - name: Deploy 🚀
+        uses: JamesIves/github-pages-deploy-action@4.1.4
+        with:
+          branch: gh-pages
+          folder: ./resources/public/

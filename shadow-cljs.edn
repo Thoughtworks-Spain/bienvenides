@@ -21,15 +21,14 @@
  {:app
   {:target     :browser
    :output-dir "resources/public/js/compiled"
-   :asset-path "/js/compiled"
    :modules
    {:app {:init-fn bienvenides.core/init}}
    :devtools
    {:preloads [bienvenides.dev]}
    :dev
-   {:compiler-options
-    {:closure-defines
-     { }}}}
+   {:asset-path "/js/compiled"}
+   :prod
+   {:asset-path "/bienvenides/js/compiled"}}
  :test
   {:target :karma
    :output-to "target/karma-test.js"
