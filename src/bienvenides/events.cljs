@@ -29,8 +29,8 @@
   (fn [{notes :notes audio-context :audio-context :as all}]
     (synth/play notes audio-context)))
 
-(defn play [cofx event]
-  {:play {:notes (-> cofx :db :hash utils/hash->name encoding/encode)
+(defn play [cofx [_ name]]
+  {:play {:notes (-> name utils/parse-name encoding/encode)
           :audio-context (-> cofx :db :audio-context)}})
 
 (defn new-routing-match

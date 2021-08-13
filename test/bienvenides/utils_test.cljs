@@ -2,14 +2,17 @@
   (:require [bienvenides.utils :as sut]
             [cljs.test :refer-macros [is are deftest testing use-fixtures async]]))
 
-(deftest initializes-to-empty
-  (is (= []
-         (sut/hash->name nil))))
 
-(deftest splits-hash
-  (is (= ["Foo" "Bar"]
-         (sut/hash->name "#Foo%20Bar"))))
+(deftest test-parse-name
 
-(deftest ignores-extra-spaces
-  (is (= ["Foo" "Bar"]
-         (sut/hash->name "#Foo%20%20Bar%20"))))
+  (testing "Empty if nil"
+    (is (= []
+           (sut/parse-name nil))))
+
+  (testing "Splits by spaces"
+    (is (= ["Foo" "Bar"]
+           (sut/parse-name "Foo Bar"))))
+
+  (testing "Ignores extra spaces"
+    (is (= ["Foo" "Bar"]
+           (sut/parse-name "Foo   Bar ")))))

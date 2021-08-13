@@ -11,7 +11,7 @@
 (defn main-panel-core [{:keys [name]}]
   [:div
    [:h1 "Bienvenides " name]
-   [:button {:on-click #(re-frame/dispatch [::events/play])} "Play"]])
+   [:button {:on-click #(re-frame/dispatch [::events/play name])} "Play"]])
 
 (defn main-panel [props]
   "The main app entrypoint, which gives a warm welcome to the user :)"

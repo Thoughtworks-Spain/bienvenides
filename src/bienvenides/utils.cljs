@@ -2,7 +2,8 @@
   (:require
    [clojure.string :as str]))
 
-(defn hash->name [hash]
-  (let [raw (if hash (subs hash 1) "")]
-    (->> (str/split raw #"%20")
-         (filter (partial not= "")))))
+(defn parse-name
+  "Parses a name before it's used to generate a music"
+  [name]
+  (->> (str/split name #" ")
+       (filter (partial not= ""))))
