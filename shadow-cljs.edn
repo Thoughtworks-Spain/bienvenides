@@ -20,15 +20,20 @@
  :builds
  {:app
   {:target     :browser
-   :output-dir "resources/public/js/compiled"
    :modules
    {:app {:init-fn bienvenides.core/init}}
    :devtools
    {:preloads [bienvenides.dev]}
    :dev
-   {:asset-path "/js/compiled"}
-   :prod
-   {:asset-path "/bienvenides/js/compiled"}}
+   {:asset-path "/js/compiled"
+    :build-hooks [(bienvenides.build.hooks/generate-index "/js/compiled/app.js"
+                                                          "./resources/public")]
+    :output-dir "./resources/public/js/compiled"}
+   :release
+   {:asset-path "/bienvenides/js/compiled"
+    :build-hooks [(bienvenides.build.hooks/generate-index "/bienvenides/js/compiled/app.js"
+                                                          "./target/resources/public")]
+    :output-dir "./target/resources/public/js/compiled"}}
  :test
   {:target :karma
    :output-to "target/karma-test.js"

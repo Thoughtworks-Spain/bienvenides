@@ -33,13 +33,13 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: app-release
-          path: ./resources/public/
+          path: ./target/resources/public/
 
   Deploy-To-Github-Pages:
     needs:
       - Creates-App-Release-Artifact
       - Run-Tests
-    if: ${{ github.ref == 'refs/heads/main' || github.ref == 'refs/heads/trying-github-pages' }}
+    if: ${{ github.ref == 'refs/heads/main' || github.ref == 'refs/heads/github-action-debug' }}
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository code
@@ -48,9 +48,9 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: app-release
-          path: ./resources/public/
+          path: ./target/resources/public/
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@4.1.4
         with:
           branch: gh-pages
-          folder: ./resources/public/
+          folder: ./target/resources/public/
