@@ -9,6 +9,7 @@
   [re-frame "1.2.0"]
   [leipzig "0.11.0-SNAPSHOT"]
   [cljs-bach "0.3.0-SNAPSHOT"]
+  [metosin/reitit "0.5.15"]
 
   [cider/cider-nrepl "0.26.0"]
   [binaryage/devtools "1.0.3"]]

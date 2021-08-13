@@ -20,3 +20,10 @@
          (events/play {:db {:audio-context 'TheContext
                             :hash "#ace"}}
                       nil))))
+
+(deftest test-new-routing-match
+  (is (= {:db {::foo 1
+               :routing-match ::match2}}
+         (events/new-routing-match {:db {::foo 1
+                                         :routing-match ::match1}}
+                                   [::events/new-routing-match ::match2]))))
