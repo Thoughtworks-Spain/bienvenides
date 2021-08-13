@@ -12,7 +12,12 @@
   (let [root-el (.getElementById js/document "app")]
     (rdom/render [views/current-page] root-el)))
 
+(defn ensure-hash! []
+  (when (= js/window.location.hash "")
+    (set! js/window.location.hash "#/")))
+
 (defn init []
   (re-frame/dispatch-sync [::events/initialize-db])
   (routing/init!)
+  (ensure-hash!)
   (mount-root))
