@@ -10,7 +10,6 @@
 (defn ^:dev/after-load mount-root []
   (re-frame/clear-subscription-cache!)
   (let [root-el (.getElementById js/document "app")]
-    (rdom/unmount-component-at-node root-el)
     (rdom/render [views/current-page] root-el)))
 
 (defn init []
