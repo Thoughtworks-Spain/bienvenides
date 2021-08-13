@@ -33,15 +33,10 @@
   {:play {:notes (-> cofx :db :hash utils/hash->name encoding/encode)
           :audio-context (-> cofx :db :audio-context)}})
 
-(defn update-hash [{db :db} [_ val]]
-  (let [parsed-hash (if (empty? val) "#Anon" val)]
-    {:db (merge db {:hash parsed-hash})}))
-
 (defn new-routing-match
   "Event fired when a new route is matched."
   [{db :db} [_ routing-match]]
   {:db (merge db {:routing-match routing-match})})
 
-(re-frame/reg-event-fx ::update-hash update-hash)
 (re-frame/reg-event-fx ::play play)
 (re-frame/reg-event-fx ::new-routing-match new-routing-match)

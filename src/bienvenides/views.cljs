@@ -9,14 +9,14 @@
   [:h1 "Ups, I don't exist :("])
 
 (defn main-panel-core [{:keys [name]}]
-  (let [first-name (some-> name first)]
-    [:div
-     [:h1 "Bienvenides " first-name]
-     [:button {:on-click #(re-frame/dispatch [::events/play])} "Play"]]))
+  [:div
+   [:h1 "Bienvenides " name]
+   [:button {:on-click #(re-frame/dispatch [::events/play])} "Play"]])
 
-(defn main-panel []
+(defn main-panel [props]
   "The main app entrypoint, which gives a warm welcome to the user :)"
-  [main-panel-core {:name @(re-frame/subscribe [::subs/name])}])
+  [main-panel-core {:name (or (some-> props :routing-match :query-params :name)
+                              "Anom")}])
 
 (defn url-generator
   "A view that allows the user to generate a custom url for a specific name."
@@ -27,7 +27,7 @@
 
 (defn current-page-core [{:keys [routing-match]}]
   (let [view (or (some-> routing-match :data :view) not-found)]
-    [view routing-match]))
+    [view {:routing-match routing-match}]))
 
 (defn current-page
   "Renders the current page depending on the routing match."
