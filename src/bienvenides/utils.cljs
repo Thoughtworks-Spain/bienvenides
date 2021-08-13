@@ -11,4 +11,4 @@
 (defn generate-url
   "Given a name, generates an welcome url"
   [name]
-  (str js/window.location.origin "/#/?name=" (js/encodeURIComponent name)))
+  (str js/window.location.origin js/window.location.pathname "#/?name=" (js/encodeURIComponent name)))
