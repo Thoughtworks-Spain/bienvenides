@@ -9,9 +9,9 @@ It's built with [ClojureScript](https://clojurescript.org/) and [re-frame](https
 ### Trying it out
 
 The app turns a name into a musical signature. To try it out:
+- Run `npm install` to install all nodejs dependencies.
 - Use `npx shadow-cljs watch app` to start the app.
-- Load the page in your browser, with a name in the hash fragment e.g. `http://localhost:8280/#Christopher%20Ford`
-- Reload the page (currently the app doesn't listen to hash fragment changes)
+- Load the page in your browser, giving your name as a query parameter: `http://localhost:8280/#/?name=Christopher%20Ford`
 - Press *Play*
 
 ### Project Overview
@@ -30,16 +30,20 @@ The app turns a name into a musical signature. To try it out:
   - CLJS compilation, dependency management, REPL, & hot reload: [`shadow-cljs`](https://github.com/thheller/shadow-cljs)
 * Development tools
   - Debugging: [CLJS DevTools](https://github.com/binaryage/cljs-devtools)
+  - IDE/REPL support: [Cider (nrepl)](https://github.com/clojure-emacs/cider)
+* Deployment tools
+  - [Github Actions](https://github.com/features/actions)
+  - [Github Pages](https://pages.github.com/)
 
 #### Directory structure
 
-* [`/`](/../../): project config files
+* [`/`](./): project config files
 * [`dev/`](dev/): source files compiled only with the [dev](#running-the-app) profile
   - [`user.cljs`](dev/cljs/user.cljs): symbols for use during development in the
 [ClojureScript REPL](#connecting-to-the-browser-repl-from-a-terminal)
-* [`resources/public/`](resources/public/): SPA root directory;
-[dev](#running-the-app) / [prod](#production) profile depends on the most recent build
+* [`resources/public/`](resources/public/): SPA root directory (during development);
   - [`index.html`](resources/public/index.html): SPA home page
+    - Dynamically generated from [template](./src/bienvenides/index.template.html) using [shadow-cljs build hooks](https://shadow-cljs.github.io/docs/UsersGuide.html#build-hooks) with the proper app entrypoint depending on the build profile (dev/release). 
     - Dynamic SPA content rendered in the following `div`:
         ```html
         <div id="app"></div>
@@ -47,10 +51,9 @@ The app turns a name into a musical signature. To try it out:
     - Customizable; add headers, footers, links to other scripts and styles, etc.
   - Generated directories and files
     - Created on build with either the [dev](#running-the-app) or [prod](#production) profile
-    - `js/compiled/`: compiled CLJS (`shadow-cljs`)
-      - Not tracked in source control; see [`.gitignore`](.gitignore)
-* [`src/bienvenides/`](src/bienvenides/): SPA source files (ClojureScript,
-[re-frame](https://github.com/Day8/re-frame))
+    - `dev` builds -> `resources/public/js/compiled`
+    - `release` builds -> `target/resources/public/js/compiled`
+* [`src/bienvenides/`](src/bienvenides/): SPA source files (ClojureScript, html, [re-frame](https://github.com/Day8/re-frame))
   - [`core.cljs`](src/bienvenides/core.cljs): contains the SPA entry point, `init`
 
 ### Editor/IDE
@@ -61,9 +64,10 @@ Use your preferred editor or IDE that supports Clojure/ClojureScript development
 ### Environment Setup
 
 1. Install [JDK 8 or later](https://openjdk.java.net/install/) (Java Development Kit)
-2. Install [Node.js](https://nodejs.org/) (JavaScript runtime environment) which should include
+2. Install [Node.js v10](https://nodejs.org/) (JavaScript runtime environment) which should include
    [NPM](https://docs.npmjs.com/cli/npm) or if your Node.js installation does not include NPM also install it.
-5. Clone this repo and open a terminal in the `bienvenides` project root directory
+   - You can also use [nvm](https://github.com/nvm-sh/nvm) which will automagically use the [.nvmrc](./nvmrc) file.
+3. Clone this repo and open a terminal in the `bienvenides` project root directory
 
 ### Browser Setup
 
@@ -104,8 +108,14 @@ Start a temporary local web server, build the app with the `dev` profile, and se
 browser test runner and karma test runner with hot reload:
 
 ```sh
+# Install dependencies
 npm install
-npx shadow-cljs watch app
+
+# Run shadow-cljs to compile both :app and :test profiles
+npx shadow-cljs watch app test
+
+# On a new terminal window/session run tests with karma
+karma start
 ```
 
 Please be patient; it may take over 20 seconds to see any output, and over 40 seconds to complete.
@@ -137,6 +147,12 @@ For example, in Vim / Neovim with `fireplace.vim`
     ```vim
     :Piggieback :app
     ```
+    
+With [emacs](https://www.gnu.org/software/emacs/) and [cider](https://github.com/clojure-emacs/cider), it should work out of the box by calling `M-x cider-connect-cljs` and selecting:
+1. Host: `localhost`
+2. Port: `bienvenides:8777`
+3. Repl Type: `shadow-select`
+4. Build: `:app`
 
 #### Connecting to the browser REPL from a terminal
 
@@ -195,5 +211,7 @@ npm run release
 
 Please be patient; it may take over 15 seconds to see any output, and over 30 seconds to complete.
 
-The `resources/public/js/compiled` directory is created, containing the compiled `app.js` and
+The `target/resources/public/js/compiled` directory is created, containing the compiled `app.js` and
 `manifest.edn` files.
+
+The `target/resources/public/index.html` is created containing the app with the prod entrypoint.

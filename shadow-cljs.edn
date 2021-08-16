@@ -35,7 +35,8 @@
     :build-hooks [(bienvenides.build.hooks/generate-index "/bienvenides/js/compiled/app.js"
                                                           "./target/resources/public")]
     :output-dir "./target/resources/public/js/compiled"}}
- :test
+
+  :test
   {:target :karma
    :output-to "target/karma-test.js"
    :ns-regexp "-test$"}}}
