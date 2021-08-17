@@ -14,4 +14,5 @@ pom.xml.asc
 .cpcache/
 /node_modules/
 /.shadow-cljs/
-/resources/public/js/
+/resources/public/js/compiled
+/resources/public/css/compiled

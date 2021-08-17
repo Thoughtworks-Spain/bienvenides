@@ -20,20 +20,29 @@
 
  :builds
  {:app
-  {:target     :browser
+  {:target
+   :browser
+
    :modules
    {:app {:init-fn bienvenides.core/init}}
+
    :devtools
    {:preloads [bienvenides.dev]}
+
    :dev
    {:asset-path "/js/compiled"
-    :build-hooks [(bienvenides.build.hooks/generate-index "/js/compiled/app.js"
-                                                          "./resources/public")]
+    :build-hooks [(bienvenides.build.hooks/generate-index)
+                  (bienvenides.build.hooks/watch-scss)]
+    :bienvenides/target-dir "./resources/public"
+    :bienvenides/stylesheet-url "/css/compiled/index.css"
     :output-dir "./resources/public/js/compiled"}
+
    :release
    {:asset-path "/bienvenides/js/compiled"
-    :build-hooks [(bienvenides.build.hooks/generate-index "/bienvenides/js/compiled/app.js"
-                                                          "./target/resources/public")]
+    :build-hooks [(bienvenides.build.hooks/generate-index)
+                  (bienvenides.build.hooks/compile-scss)]
+    :bienvenides/target-dir "./target/resources/public"
+    :bienvenides/stylesheet-url "/bienvenides/css/compiled/index.css"
     :output-dir "./target/resources/public/js/compiled"}}
 
   :test
