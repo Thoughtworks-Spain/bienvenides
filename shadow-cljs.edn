@@ -40,7 +40,8 @@
    :release
    {:asset-path "/bienvenides/js/compiled"
     :build-hooks [(bienvenides.build.hooks/generate-index)
-                  (bienvenides.build.hooks/compile-scss)]
+                  (bienvenides.build.hooks/compile-scss)
+                  (bienvenides.build.hooks/copy-static-files)]
     :bienvenides/target-dir "./target/resources/public"
     :bienvenides/stylesheet-url "/bienvenides/css/compiled/index.css"
     :output-dir "./target/resources/public/js/compiled"}}

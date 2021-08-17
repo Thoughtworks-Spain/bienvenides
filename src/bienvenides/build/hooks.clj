@@ -6,6 +6,7 @@
             [clojure.core.async :as async]))
 
 (def INDEX_TEMPLATE "./src/bienvenides/index.template.html")
+(def STATIC_FILES ["fonts"])
 (defonce sass-running? (atom false))
 
 (defn generate-index
@@ -38,6 +39,21 @@
       (when (not= exit 0)
         (throw (ex-info "Failed to compile scss to css" {:sh-result sh-result}))))
     build-state))
+
+(defn copy-static-files
+  "Copies all static files to the target directory. Used only for production."
+  {:shadow.build/stage :flush}
+  [build-state & _]
+  (let [target-dir (-> build-state :shadow.build/config :bienvenides/target-dir)]
+    (doseq [static-file STATIC_FILES
+            :let [from (str "./resources/public/" static-file)
+                  to (str target-dir "/" static-file)
+                  cmd ["cp" "-r" from to]]]
+      (->> cmd (string/join " ") (str "Calling command: ") prn)
+      (let [{:keys [exit] :as sh-result} (apply shell/sh cmd)]
+        (when (not= exit 0)
+          (throw (ex-info "Failed to copy static file" {:sh-result sh-result}))))))
+  build-state)
 
 (defn watch-scss
   "Compiles scss, trigering recompilation on changes. Only used for
