@@ -2,9 +2,11 @@
   (:require [clojure.java.io :as io]
             [clojure.java.shell :as shell]
             [clojure.pprint :as pprint]
-            [clojure.string :as string]))
+            [clojure.string :as string]
+            [clojure.core.async :as async]))
 
 (def INDEX_TEMPLATE "./src/bienvenides/index.template.html")
+(defonce sass-running? (atom false))
 
 (defn generate-index
   "Generates an `index.html` file at the public folder with the correct entrypoint url based on a template"
@@ -44,7 +46,15 @@
   {:shadow.build/stage :configure}
   [build-state & _]
   (let [target-dir (-> build-state :shadow.build/config :bienvenides/target-dir)
-        cmd ["npx" "sass" "--watch" "./src/scss/core.scss" (str target-dir "/css/compiled/index.css")]]
-    (->> cmd (string/join " ") (str "Calling command: ") prn)
-    (-> cmd ProcessBuilder. .inheritIO .start)
+        cmd ["npx" "sass" "--watch" "./src/scss/core.scss" (str target-dir "/css/compiled/index.css")]
+        on-exit (fn [_]
+                  (prn "WARNING: SASS STOPPED")
+                  (reset! sass-running? false))]
+    (when-not @sass-running?
+      (async/go
+        (reset! sass-running? true)
+        (->> cmd (string/join " ") (str "Calling command: ") prn)
+        (-> cmd ProcessBuilder. .inheritIO .start .waitFor)
+        (prn "WARNING: SASS WATCH STOPPED!")
+        (reset! sass-running? false)))
     build-state))
