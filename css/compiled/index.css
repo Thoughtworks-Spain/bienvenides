@@ -68,6 +68,27 @@
   src: local(""), url("../../fonts/noto-serif-sc-v8-latin-900.eot?#iefix") format("embedded-opentype"), url("../../fonts/noto-serif-sc-v8-latin-900.woff2") format("woff2"), url("../../fonts/noto-serif-sc-v8-latin-900.woff") format("woff"), url("../../fonts/noto-serif-sc-v8-latin-900.ttf") format("truetype"), url("../../fonts/noto-serif-sc-v8-latin-900.svg#NotoSerifSC") format("svg");
   /* Legacy iOS */
 }
+.button {
+  display: inline-block;
+  background-color: #e16a7c;
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 630;
+  letter-spacing: 0;
+  line-height: 1.5;
+  padding: 0.75rem 1.5rem;
+  cursor: pointer;
+  border: 0;
+}
+.button:hover {
+  background-color: #bd4257 !important;
+}
+
+.main-panel {
+  margin: 50px 100px;
+  text-align: center;
+}
+
 html {
   font-size: 100%;
 }
