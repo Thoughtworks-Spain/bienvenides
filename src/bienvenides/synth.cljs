@@ -27,8 +27,12 @@
        (melody/tempo (melody/bpm 100))
        (melody/where :pitch (comp temperament/equal scale/C scale/pentatonic)))))
 
-(defn play [notes audio-context]
-  (doseq [{:keys [pitch time duration] :as note} (arrange notes)]
-    (let [connected (cljb/connect-> (ping pitch) cljb/destination)
-          at (+ time (cljb/current-time audio-context))]
-      (cljb/run-with connected audio-context at duration))))
+(defn play
+  ([notes audio-context] (play notes audio-context {}))
+  ([notes audio-context {:keys [register-note!] :as options}]
+   (doseq [{:keys [pitch time duration] :as note} (arrange notes)]
+     (let [connected (cljb/connect-> (ping pitch) cljb/destination)
+           at (+ time (cljb/current-time audio-context))]
+       (cljb/run-with connected audio-context at duration)
+       (when register-note!
+         (register-note! note))))))

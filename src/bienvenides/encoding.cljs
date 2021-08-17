@@ -26,9 +26,21 @@
         durations (encode-duration persons-name)]
     (melody/phrase durations pitches)))
 
+(defn set-indexes
+  "Given the index of the name and an encoded name, set's `name-index` and
+  `letter-index` for each note in each name."
+  [name-index encoded-name]
+  (map-indexed
+   (fn [letter-index note]
+     (assoc note
+            :bienvenides/name-index name-index
+            :bienvenides/letter-index letter-index))
+   encoded-name))
+
 (defn encode [names]
   (->> names
        (map str/lower-case)
        (map encode-one)
        (map #(->> %2 (melody/where :pitch (scale/from (* 5 %1)))) (range))
+       (map-indexed set-indexes)
        (reduce melody/with)))

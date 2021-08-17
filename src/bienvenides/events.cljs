@@ -4,7 +4,8 @@
    [bienvenides.encoding :as encoding]
    [bienvenides.synth :as synth]
    [bienvenides.utils :as utils]
-   [leipzig.melody :as melody]))
+   [leipzig.melody :as melody]
+   [clojure.core.async :as async]))
 
 (defn initialize-audio-context [cofx event]
   (let [audio-context (:audio-context cofx)]
@@ -27,7 +28,13 @@
 (re-frame/reg-fx
   :play
   (fn [{notes :notes audio-context :audio-context :as all}]
-    (synth/play notes audio-context)))
+    (letfn [(register-note! [{:keys [time duration] :as note}]
+              (async/go
+                (async/<! (utils/timeout-seconds time))
+                (re-frame/dispatch [::note-started-playing note])
+                (async/<! (utils/timeout-seconds duration))
+                (re-frame/dispatch [::note-stopped-playing note])))]
+      (synth/play notes audio-context {:register-note! register-note!}))))
 
 (defn play [cofx [_ names]]
   {:play {:notes (encoding/encode names)
@@ -38,5 +45,19 @@
   [{db :db} [_ routing-match]]
   {:db (merge db {:routing-match routing-match})})
 
+(defn note-started-playing
+  "Event fired when a note starts playing"
+  [{{:keys [current-notes] :as db} :db} [_ note]]
+  (let [new-notes (conj (or current-notes #{}) note)]
+    {:db (merge db {:current-notes new-notes})}))
+
+(defn note-stopped-playing
+  "Event fired when a note stops playing"
+  [{{:keys [current-notes] :as db} :db} [_ note]]
+  (let [new-notes (disj (or current-notes #{}) note)]
+    {:db (merge db {:current-notes new-notes})}))
+
 (re-frame/reg-event-fx ::play play)
 (re-frame/reg-event-fx ::new-routing-match new-routing-match)
+(re-frame/reg-event-fx ::note-started-playing note-started-playing)
+(re-frame/reg-event-fx ::note-stopped-playing note-stopped-playing)
