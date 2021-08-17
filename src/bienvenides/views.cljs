@@ -1,5 +1,6 @@
 (ns bienvenides.views
   (:require
+   [clojure.string :as string]
    [re-frame.core :as re-frame]
    [bienvenides.events :as events]
    [bienvenides.subs :as subs]
@@ -9,15 +10,15 @@
 (defn not-found []
   [:h1 "Ups, I don't exist :("])
 
-(defn main-panel-core [{:keys [name]}]
+(defn main-panel-core [{:keys [names]}]
   [:div.main-panel
-   [:h1 "Bienvenides " name]
-   [:button.button {:on-click #(re-frame/dispatch [::events/play name])} "Play"]])
+   [:h1 "Bienvenides " (string/join " " names)]
+   [:button.button {:on-click #(re-frame/dispatch [::events/play names])} "Play"]])
 
 (defn main-panel [props]
   "The main app entrypoint, which gives a warm welcome to the user :)"
-  [main-panel-core {:name (or (some-> props :routing-match :query-params :name)
-                              "Anom")}])
+  [main-panel-core {:names (or (some-> props :routing-match :query-params :name utils/parse-names)
+                               ["Anom"])}])
 
 (defn url-generator-core
   [{:keys [value on-change]}]

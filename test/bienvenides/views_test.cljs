@@ -18,10 +18,10 @@
 
   (testing "extracts query-param from routing match"
     (let [routing-match {:query-params {:name "Foo Bar Baz"}}]
-      (is (= [sut/main-panel-core {:name "Foo Bar Baz"}]
+      (is (= [sut/main-panel-core {:names ["Foo" "Bar" "Baz"]}]
              (sut/main-panel {:routing-match routing-match})))))
 
   (testing "Defaults to Anom"
     (let [routing-match {}]
-      (is (= [sut/main-panel-core {:name "Anom"}]
+      (is (= [sut/main-panel-core {:names ["Anom"]}]
              (sut/main-panel {:routing-match routing-match}))))))

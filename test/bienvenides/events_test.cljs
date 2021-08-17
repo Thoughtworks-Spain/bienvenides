@@ -14,7 +14,7 @@
                            {:pitch 4 :time 1.5 :duration 1}]
                    :audio-context 'TheContext}}
            (events/play {:db {:audio-context 'TheContext}}
-                        [::events/play "Ace"])))))
+                        [::events/play ["Ace"]])))))
 
 (deftest test-new-routing-match
   (is (= {:db {::foo 1
