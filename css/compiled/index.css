@@ -88,6 +88,17 @@
   margin: 50px 100px;
   text-align: center;
 }
+.main-panel__single-name {
+  margin-right: 10px;
+}
+.main-panel__letter {
+  transition: all 0.3s;
+}
+.main-panel__letter--active {
+  display: inline-block;
+  transform: translateY(-5px);
+  color: blue;
+}
 
 html {
   font-size: 100%;
