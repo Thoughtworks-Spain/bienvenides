@@ -55,4 +55,7 @@
   :test
   {:target :karma
    :output-to "target/karma-test.js"
-   :ns-regexp "-test$"}}}
+   :ns-regexp "-test$"
+   ;; This allows us to use with-redefs for multi arit fns
+   ;; see https://clojure.atlassian.net/browse/CLJS-1623
+   :compiler-options {:static-fns false}}}}

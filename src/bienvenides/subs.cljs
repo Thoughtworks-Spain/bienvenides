@@ -7,3 +7,8 @@
  ::routing-match
  (fn [db]
    (some-> db :routing-match)))
+
+(re-frame/reg-sub
+ ::current-notes
+ (fn [db]
+   (or (some-> db :current-notes) #{})))

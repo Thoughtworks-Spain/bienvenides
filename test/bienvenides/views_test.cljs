@@ -1,6 +1,10 @@
 (ns bienvenides.views-test
   (:require [bienvenides.views :as sut]
-            [cljs.test :refer-macros [is are deftest testing use-fixtures async]]))
+            [re-frame.core :as re-frame]
+            [cljs.test :refer-macros [is are deftest testing use-fixtures async]]
+            [bienvenides.subs :as subs]))
+
+(def a-note {:bienvenides/letter-index 1 :bienvenides/name-index 0})
 
 (deftest test-current-page-core
 
@@ -14,14 +18,51 @@
              (sut/current-page-core {:routing-match match}))))))
 
 
+(deftest test-main-panel-name
+
+  (testing "Renders the name with no active letter if no current note"
+    (let [current-notes #{}
+          names ["Foo" "Bar"]]
+      (is (= [:span.main-panel__full-name
+              [[:span.main-panel__single-name {:key 0}
+                [[:span {:key "00F" :class sut/letter-class} "F"]
+                 [:span {:key "01o" :class sut/letter-class} "o"]
+                 [:span {:key "02o" :class sut/letter-class} "o"]]]
+               [:span.main-panel__single-name {:key 1}
+                [[:span {:key "10B" :class sut/letter-class} "B"]
+                 [:span {:key "11a" :class sut/letter-class} "a"]
+                 [:span {:key "12r" :class sut/letter-class} "r"]]]]]
+             (sut/main-panel-name {:names names :current-notes current-notes})))))
+
+  (testing "Renders notes with active class if they are active"
+    (let [current-notes #{a-note}
+          names ["Foo"]]
+      (is (= [:span.main-panel__full-name
+              [[:span.main-panel__single-name {:key 0}
+                [[:span {:key "00F" :class sut/letter-class} "F"]
+                 [:span {:key "01o" :class sut/letter-class-active} "o"]
+                 [:span {:key "02o" :class sut/letter-class} "o"]]]]]
+             (sut/main-panel-name {:names names :current-notes current-notes}))))))
+
 (deftest test-main-panel
 
   (testing "extracts query-param from routing match"
     (let [routing-match {:query-params {:name "Foo Bar Baz"}}]
-      (is (= [sut/main-panel-core {:names ["Foo" "Bar" "Baz"]}]
+      (is (= [sut/main-panel-core {:names ["Foo" "Bar" "Baz"]
+                                   :current-notes #{}}]
              (sut/main-panel {:routing-match routing-match})))))
 
-  (testing "Defaults to Anom"
+  (testing "Defaults name to Anom"
     (let [routing-match {}]
-      (is (= [sut/main-panel-core {:names ["Anom"]}]
-             (sut/main-panel {:routing-match routing-match}))))))
+      (is (= [sut/main-panel-core {:names ["Anom"]
+                                   :current-notes #{}}]
+             (sut/main-panel {:routing-match routing-match})))))
+
+  (testing "Uses subscription for current-notes"
+    (with-redefs [re-frame/subscribe (fn [[k]]
+                                       (atom
+                                        (when (= k ::subs/current-notes)
+                                          #{a-note})))]
+      (is (= [sut/main-panel-core {:names ["Anom"]
+                                   :current-notes #{a-note}}]
+             (sut/main-panel {:routing-match nil}))))))

@@ -7,18 +7,40 @@
    [bienvenides.utils :as utils]
    [reagent.core :as r]))
 
+(def letter-class "main-panel__letter")
+(def letter-class-active (str letter-class " " "main-panel__letter--active"))
+
 (defn not-found []
   [:h1 "Ups, I don't exist :("])
 
-(defn main-panel-core [{:keys [names]}]
+(defn main-panel-name
+  "A component that renders the name of the person inside the main panel."
+  [{:keys [names current-notes]}]
+  (letfn [(letter-playing? [name-index letter-index]
+            (some #(and (= name-index (:bienvenides/name-index %))
+                        (= letter-index (:bienvenides/letter-index %)))
+                  current-notes))
+          (render-letter [name-index letter-index letter]
+            (let [key (str name-index letter-index letter)
+                  class (if (letter-playing? name-index letter-index) letter-class-active letter-class)]
+              [:span {:key key :class class} letter]))]
+    [:span.main-panel__full-name
+     (for [[name-index name] (map vector (range) names)]
+       [:span.main-panel__single-name {:key name-index}
+        (for [[letter-index letter] (map vector (range) name)]
+          (render-letter name-index letter-index letter))])]))
+
+(defn main-panel-core [{:keys [names current-notes]}]
   [:div.main-panel
-   [:h1 "Bienvenides " (string/join " " names)]
+   [:h1 "Bienvenides "
+    [main-panel-name {:names names :current-notes current-notes}]]
    [:button.button {:on-click #(re-frame/dispatch [::events/play names])} "Play"]])
 
 (defn main-panel [props]
   "The main app entrypoint, which gives a warm welcome to the user :)"
   [main-panel-core {:names (or (some-> props :routing-match :query-params :name utils/parse-names)
-                               ["Anom"])}])
+                               ["Anom"])
+                    :current-notes @(re-frame/subscribe [::subs/current-notes])}])
 
 (defn url-generator-core
   [{:keys [value on-change]}]

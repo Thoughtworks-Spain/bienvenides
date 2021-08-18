@@ -1,4 +1,19 @@
 .main-panel {
     margin: 50px 100px;
     text-align: center;
+
+    &__single-name {
+        margin-right: 10px;
+    }
+    
+    &__letter {
+
+        &--active {
+            display: inline-block;
+            transform: translateY(-5px);
+            color: blue;
+        }
+
+        transition: all 0.3s;
+    }
 }
