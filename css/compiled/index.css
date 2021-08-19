@@ -83,6 +83,10 @@
 .button:hover {
   background-color: #bd4257 !important;
 }
+.button:disabled {
+  background-color: #e16a7c !important;
+  cursor: not-allowed;
+}
 
 .main-panel {
   margin: 50px 100px;
@@ -98,6 +102,9 @@
   display: inline-block;
   transform: translateY(-5px);
   color: blue;
+}
+.main-panel__control-dashboard {
+  text-align: left;
 }
 
 html {
