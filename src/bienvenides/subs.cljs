@@ -3,6 +3,8 @@
    [re-frame.core :as re-frame]
    [bienvenides.utils :as utils]))
 
+(def DEFAULT_PLAY_OPTIONS {:beats 100})
+
 (re-frame/reg-sub
  ::routing-match
  (fn [db]
@@ -12,3 +14,9 @@
  ::current-notes
  (fn [db]
    (or (some-> db :current-notes) #{})))
+
+(re-frame/reg-sub
+ ::play-options
+ (fn [db]
+   (or (some-> db :play-options)
+       DEFAULT_PLAY_OPTIONS)))

@@ -60,7 +60,13 @@
   (let [new-notes (disj (or current-notes #{}) note)]
     {:db (merge db {:current-notes new-notes})}))
 
+(defn set-play-options
+  "Event used to set `play-options` on the db."
+  [{db :db} [_ play-options]]
+  {:db (merge db {:play-options play-options})})
+
 (re-frame/reg-event-fx ::play play)
 (re-frame/reg-event-fx ::new-routing-match new-routing-match)
 (re-frame/reg-event-fx ::note-started-playing note-started-playing)
 (re-frame/reg-event-fx ::note-stopped-playing note-stopped-playing)
+(re-frame/reg-event-fx ::set-play-options set-play-options)

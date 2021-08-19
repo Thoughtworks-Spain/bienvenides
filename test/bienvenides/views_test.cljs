@@ -49,20 +49,24 @@
   (testing "extracts query-param from routing match"
     (let [routing-match {:query-params {:name "Foo Bar Baz"}}]
       (is (= [sut/main-panel-core {:names ["Foo" "Bar" "Baz"]
-                                   :current-notes #{}}]
+                                   :current-notes #{}
+                                   :play-options subs/DEFAULT_PLAY_OPTIONS}]
              (sut/main-panel {:routing-match routing-match})))))
 
   (testing "Defaults name to Anom"
     (let [routing-match {}]
       (is (= [sut/main-panel-core {:names ["Anom"]
-                                   :current-notes #{}}]
+                                   :current-notes #{}
+                                   :play-options subs/DEFAULT_PLAY_OPTIONS}]
              (sut/main-panel {:routing-match routing-match})))))
 
-  (testing "Uses subscription for current-notes"
+  (testing "Uses subscription for current-notes and play-options"
     (with-redefs [re-frame/subscribe (fn [[k]]
                                        (atom
-                                        (when (= k ::subs/current-notes)
-                                          #{a-note})))]
+                                        (case k
+                                          ::subs/current-notes #{a-note}
+                                          ::subs/play-options {:beats 120})))]
       (is (= [sut/main-panel-core {:names ["Anom"]
-                                   :current-notes #{a-note}}]
+                                   :current-notes #{a-note}
+                                   :play-options {:beats 120}}]
              (sut/main-panel {:routing-match nil}))))))

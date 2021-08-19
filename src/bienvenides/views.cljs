@@ -30,17 +30,32 @@
         (for [[letter-index letter] (map vector (range) name)]
           (render-letter name-index letter-index letter))])]))
 
-(defn main-panel-core [{:keys [names current-notes]}]
+(defn main-panel-beats-input
+  "An input to control the beats of the song."
+  [{:keys [play-options]}]
+  (letfn [(on-change [event]
+            (let [beats (-> event .-target .-value)
+                  play-options' (merge play-options {:beats beats})]
+              (re-frame/dispatch [::events/set-play-options play-options'])))]
+    [:input {:type "number"
+             :on-change on-change
+             :value (:beats play-options)}]))
+
+(defn main-panel-core [{:keys [names current-notes play-options]}]
   [:div.main-panel
    [:h1 "Bienvenides "
     [main-panel-name {:names names :current-notes current-notes}]]
+   [:div.main-panel__control-dashboard
+    [:span "Beats: "]
+    [main-panel-beats-input {:play-options play-options}]]
    [:button.button {:on-click #(re-frame/dispatch [::events/play names])} "Play"]])
 
 (defn main-panel [props]
   "The main app entrypoint, which gives a warm welcome to the user :)"
   [main-panel-core {:names (or (some-> props :routing-match :query-params :name utils/parse-names)
                                ["Anom"])
-                    :current-notes @(re-frame/subscribe [::subs/current-notes])}])
+                    :current-notes @(re-frame/subscribe [::subs/current-notes])
+                    :play-options @(re-frame/subscribe [::subs/play-options])}])
 
 (defn url-generator-core
   [{:keys [value on-change]}]
