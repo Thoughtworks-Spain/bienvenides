@@ -25,20 +25,23 @@
           (:db cofx)
           {:audio-context (initialize-audio-context cofx event)})}))
 
-(re-frame/reg-fx
-  :play
-  (fn [{notes :notes audio-context :audio-context :as all}]
-    (letfn [(register-note! [{:keys [time duration] :as note}]
-              (async/go
-                (async/<! (utils/timeout-seconds time))
-                (re-frame/dispatch [::note-started-playing note])
-                (async/<! (utils/timeout-seconds duration))
-                (re-frame/dispatch [::note-stopped-playing note])))]
-      (synth/play notes audio-context {:register-note! register-note!}))))
+(defn play-fx
+  [{:keys [notes audio-context play-options]}]
+  (letfn [(register-note! [{:keys [time duration] :as note}]
+            (async/go
+              (async/<! (utils/timeout-seconds time))
+              (re-frame/dispatch [::note-started-playing note])
+              (async/<! (utils/timeout-seconds duration))
+              (re-frame/dispatch [::note-stopped-playing note])))]
+    (let [play-options' (merge play-options {:register-note! register-note!})]
+      (synth/play notes audio-context play-options'))))
+
+(re-frame/reg-fx :play play-fx)
 
 (defn play [cofx [_ names]]
   {:play {:notes (encoding/encode names)
-          :audio-context (-> cofx :db :audio-context)}})
+          :audio-context (-> cofx :db :audio-context)
+          :play-options (some-> cofx :db :play-options)}})
 
 (defn new-routing-match
   "Event fired when a new route is matched."

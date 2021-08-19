@@ -5,6 +5,8 @@
    [leipzig.melody :as melody]
    [leipzig.scale :as scale]))
 
+(def DEFAULT_BEATS 100)
+
 (defn audio-context []
   (cljb/audio-context))
 
@@ -18,19 +20,28 @@
   (->> (melody/phrase [2 2 4] [0 -1 -2])
        (melody/where :pitch (scale/from -5))))
 
-(defn arrange [notes]
-  (let [once (->> notes (melody/with bass))]
-    (->>
-       (melody/cut 4 once)
-       (melody/times 2)
-       (melody/with (melody/after 8 once))
-       (melody/tempo (melody/bpm 100))
-       (melody/where :pitch (comp temperament/equal scale/C scale/pentatonic)))))
+(defn arrange
+  ([notes] (arrange notes {}))
+  ([notes {:keys [beats]
+           :as options}]
+   (let [once (->> notes (melody/with bass))
+         beats (or beats DEFAULT_BEATS)]
+     (->>
+      (melody/cut 4 once)
+      (melody/times 2)
+      (melody/with (melody/after 8 once))
+      (melody/tempo (melody/bpm beats))
+      (melody/where :pitch (comp temperament/equal scale/C scale/pentatonic))))))
 
 (defn play
+  "Plays a sequence of `notes` in a given `audio-context`.
+  Options:
+   `register-note!` Callback function called for each note that will be played eventually.
+   `beats` Number of beats used to create the melody."
   ([notes audio-context] (play notes audio-context {}))
-  ([notes audio-context {:keys [register-note!] :as options}]
-   (doseq [{:keys [pitch time duration] :as note} (arrange notes)]
+  ([notes audio-context {:keys [register-note! beats]
+                         :as options}]
+   (doseq [{:keys [pitch time duration] :as note} (arrange notes {:beats beats})]
      (let [connected (cljb/connect-> (ping pitch) cljb/destination)
            at (+ time (cljb/current-time audio-context))]
        (cljb/run-with connected audio-context at duration)
