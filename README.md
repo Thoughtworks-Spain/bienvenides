@@ -43,7 +43,7 @@ The app turns a name into a musical signature. To try it out:
 [ClojureScript REPL](#connecting-to-the-browser-repl-from-a-terminal)
 * [`resources/public/`](resources/public/): SPA root directory (during development);
   - [`index.html`](resources/public/index.html): SPA home page
-    - Dynamically generated from [template](./src/bienvenides/index.template.html) using [shadow-cljs build hooks](https://shadow-cljs.github.io/docs/UsersGuide.html#build-hooks) with the proper app entrypoint depending on the build profile (dev/release). 
+    - Dynamically generated from [template](./src/index.template.html) using [shadow-cljs build hooks](https://shadow-cljs.github.io/docs/UsersGuide.html#build-hooks) with the proper app entrypoint depending on the build profile (dev/release). 
     - Dynamic SPA content rendered in the following `div`:
         ```html
         <div id="app"></div>

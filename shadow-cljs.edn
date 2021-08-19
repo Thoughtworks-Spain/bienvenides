@@ -11,6 +11,7 @@
   [cljs-bach "0.3.0-SNAPSHOT"]
   [metosin/reitit "0.5.15"]
 
+  ;; Dev dependencies
   [cider/cider-nrepl "0.26.0"]
   [binaryage/devtools "1.0.3"]
   [day8.re-frame/tracing      "0.6.2"]
@@ -36,21 +37,21 @@
    {:asset-path "/js/compiled"
     :build-hooks [(bienvenides.build.hooks/generate-index)
                   (bienvenides.build.hooks/watch-scss)]
-    :bienvenides/target-dir "./resources/public"
-    :bienvenides/stylesheet-url "/css/compiled/index.css"
     :output-dir "./resources/public/js/compiled"
     :closure-defines {re-frame.trace.trace-enabled?        true
-                      day8.re-frame.tracing.trace-enabled? true}}
+                      day8.re-frame.tracing.trace-enabled? true}
+    :bienvenides.build-config/target-dir "./resources/public"
+    :bienvenides.build-config/stylesheet-url "/css/compiled/index.css"}
 
    :release
    {:asset-path "/bienvenides/js/compiled"
     :build-hooks [(bienvenides.build.hooks/generate-index)
                   (bienvenides.build.hooks/compile-scss)
                   (bienvenides.build.hooks/copy-static-files)]
-    :bienvenides/target-dir "./target/resources/public"
-    :bienvenides/stylesheet-url "/bienvenides/css/compiled/index.css"
     :output-dir "./target/resources/public/js/compiled"
-    :build-options {:ns-aliases {day8.re-frame.tracing day8.re-frame.tracing-stubs}}}}
+    :build-options {:ns-aliases {day8.re-frame.tracing day8.re-frame.tracing-stubs}}
+    :bienvenides.build-config/target-dir "./target/resources/public"
+    :bienvenides.build-config/stylesheet-url "/bienvenides/css/compiled/index.css"}}
 
   :test
   {:target :karma
