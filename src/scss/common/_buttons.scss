@@ -11,6 +11,11 @@
     border: 0;
 
     &:hover {
-        background-color: #bd4257!important;
+        background-color: #bd4257 !important;
+    }
+
+    &:disabled {
+        background-color: #e16a7c !important;
+        cursor: not-allowed;
     }
 }

@@ -48,7 +48,8 @@
    [:div.main-panel__control-dashboard
     [:span "Beats: "]
     [main-panel-beats-input {:play-options play-options}]]
-   [:button.button {:on-click #(re-frame/dispatch [::events/play names])} "Play"]])
+   [:button.button {:on-click #(re-frame/dispatch [::events/play names])
+                    :disabled (not (empty? current-notes))} "Play"]])
 
 (defn main-panel [props]
   "The main app entrypoint, which gives a warm welcome to the user :)"
