@@ -41,13 +41,34 @@
              :on-change on-change
              :value (:beats play-options)}]))
 
-(defn main-panel-core [{:keys [names current-notes play-options]}]
+(defn main-panel-duration-input
+  "Inputs for vowel and consonant durations (encoding options)"
+  [{:keys [encoding-options]}]
+  (letfn [(on-change [duration-key event]
+            (let [duration-value (-> event .-target .-value js/parseFloat)
+                  encoding-options' (assoc-in encoding-options [:duration duration-key] duration-value)]
+              (re-frame/dispatch [::events/set-encoding-options encoding-options'])))]
+    [:<>
+     [:span.main-panel__dashboard-input-wrapper
+      [:span "Vowel Duration: "]
+      [:input {:type "number"
+               :on-change #(on-change :vowel %)
+               :value (or (some-> encoding-options :duration :vowel) "")}]]
+     [:span.main-panel__dashboard-input-wrapper
+      [:span "Consonant Duration: "]
+      [:input {:type "number"
+               :on-change #(on-change :consonant %)
+               :value (or (some-> encoding-options :duration :consonant) "")}]]]))
+
+(defn main-panel-core [{:keys [names current-notes play-options encoding-options]}]
   [:div.main-panel
    [:h1 "Bienvenides "
     [main-panel-name {:names names :current-notes current-notes}]]
    [:div.main-panel__control-dashboard
-    [:span "Beats: "]
-    [main-panel-beats-input {:play-options play-options}]]
+    [:span.main-panel__dashboard-input-wrapper
+     [:span "Beats: "]
+     [main-panel-beats-input {:play-options play-options}]]
+    [main-panel-duration-input {:encoding-options encoding-options}]]
    [:button.button {:on-click #(re-frame/dispatch [::events/play names])
                     :disabled (not (empty? current-notes))} "Play"]])
 
@@ -56,7 +77,8 @@
   [main-panel-core {:names (or (some-> props :routing-match :query-params :name utils/parse-names)
                                ["Anom"])
                     :current-notes @(re-frame/subscribe [::subs/current-notes])
-                    :play-options @(re-frame/subscribe [::subs/play-options])}])
+                    :play-options @(re-frame/subscribe [::subs/play-options])
+                    :encoding-options @(re-frame/subscribe [::subs/encoding-options])}])
 
 (defn url-generator-core
   [{:keys [value on-change]}]

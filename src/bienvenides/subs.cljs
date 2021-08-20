@@ -4,6 +4,7 @@
    [bienvenides.utils :as utils]))
 
 (def DEFAULT_PLAY_OPTIONS {:beats 100})
+(def DEFAULT_ENCODING_OPTIONS {:duration {:vowel 1 :consonant 0.5}})
 
 (re-frame/reg-sub
  ::routing-match
@@ -20,3 +21,9 @@
  (fn [db]
    (or (some-> db :play-options)
        DEFAULT_PLAY_OPTIONS)))
+
+(re-frame/reg-sub
+ ::encoding-options
+ (fn [db]
+   (or (some-> db :encoding-options)
+       DEFAULT_ENCODING_OPTIONS)))
