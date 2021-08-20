@@ -1,34 +1,42 @@
 (ns bienvenides.encoding-test
   (:require
-    [cljs.test :refer [deftest is]]
+    [cljs.test :refer [deftest is testing]]
     [bienvenides.encoding :as encoding]))
 
-(deftest initializes-to-empty
-  (is (= []
-         (encoding/encode [] {}))))
+(deftest test-encoding
 
-(deftest starts-at-a
-  (is (= [{:pitch 0 :duration 1 :time 0 :bienvenides/name-index 0 :bienvenides/letter-index 0}
-          {:pitch 1 :duration 0.5 :time 1 :bienvenides/name-index 0 :bienvenides/letter-index 1}
-          {:pitch 2 :duration 0.5 :time 1.5 :bienvenides/name-index 0 :bienvenides/letter-index 2}]
-         (encoding/encode ["abc"] {}))))
+  (testing "Initializes to empty"
+    (is (= []
+           (encoding/encode [] {}))))
 
-(deftest cycles-around-at-f
-  (is (= [{:pitch 4 :duration 1 :time 0 :bienvenides/name-index 0 :bienvenides/letter-index 0}
-          {:pitch 0 :duration 0.5 :time 1 :bienvenides/name-index 0 :bienvenides/letter-index 1}
-          {:pitch 1 :duration 0.5 :time 1.5 :bienvenides/name-index 0 :bienvenides/letter-index 2}]
-         (encoding/encode ["efg"] {}))))
+  (testing "Starts at a"
+    (is (= [{:pitch 0 :duration 1 :time 0 :bienvenides/name-index 0 :bienvenides/letter-index 0}
+            {:pitch 1 :duration 0.5 :time 1 :bienvenides/name-index 0 :bienvenides/letter-index 1}
+            {:pitch 2 :duration 0.5 :time 1.5 :bienvenides/name-index 0 :bienvenides/letter-index 2}]
+           (encoding/encode ["abc"] {}))))
 
-(deftest treats-multiple-words-as-multiple-parts-in-increasing-octaves
-  (is (= [{:pitch 0 :duration 1 :time 0 :bienvenides/name-index 0 :bienvenides/letter-index 0}     ; a
-          {:pitch 7 :duration 0.5 :time 0 :bienvenides/name-index 1 :bienvenides/letter-index 0}   ; c
+  (testing "Cycles around at f"
+    (is (= [{:pitch 4 :duration 1 :time 0 :bienvenides/name-index 0 :bienvenides/letter-index 0}
+            {:pitch 0 :duration 0.5 :time 1 :bienvenides/name-index 0 :bienvenides/letter-index 1}
+            {:pitch 1 :duration 0.5 :time 1.5 :bienvenides/name-index 0 :bienvenides/letter-index 2}]
+           (encoding/encode ["efg"] {}))))
 
-          {:pitch 8 :duration 0.5 :time 0.5 :bienvenides/name-index 1 :bienvenides/letter-index 1} ; d
-          {:pitch 1 :duration 0.5 :time 1 :bienvenides/name-index 0 :bienvenides/letter-index 1}]  ; b
-         (encoding/encode ["ab" "cd"] {}))))
+  (testing "Treats multiple words as multiple parts in increasing octaves"
+    (is (= [{:pitch 0 :duration 1 :time 0 :bienvenides/name-index 0 :bienvenides/letter-index 0} ; a
+            {:pitch 7 :duration 0.5 :time 0 :bienvenides/name-index 1 :bienvenides/letter-index 0} ; c
 
-(deftest treats-uppercase-the-same-as-lowercase
-  (is (= [{:pitch 0 :duration 1 :time 0 :bienvenides/name-index 0 :bienvenides/letter-index 0}
-          {:pitch 1 :duration 0.5 :time 1 :bienvenides/name-index 0 :bienvenides/letter-index 1}
-          {:pitch 2 :duration 0.5 :time 1.5 :bienvenides/name-index 0 :bienvenides/letter-index 2}]
-         (encoding/encode ["ABC"] {}))))
+            {:pitch 8 :duration 0.5 :time 0.5 :bienvenides/name-index 1 :bienvenides/letter-index 1} ; d
+            {:pitch 1 :duration 0.5 :time 1 :bienvenides/name-index 0 :bienvenides/letter-index 1}] ; b
+           (encoding/encode ["ab" "cd"] {}))))
+
+  (testing "Treats uppercase the same as lowercase"
+    (is (= [{:pitch 0 :duration 1 :time 0 :bienvenides/name-index 0 :bienvenides/letter-index 0}
+            {:pitch 1 :duration 0.5 :time 1 :bienvenides/name-index 0 :bienvenides/letter-index 1}
+            {:pitch 2 :duration 0.5 :time 1.5 :bienvenides/name-index 0 :bienvenides/letter-index 2}]
+           (encoding/encode ["ABC"] {}))))
+
+  (testing "Changes duration of vowels and consonants depending on encoding-options"
+    (is (= [{:pitch 0 :duration 2 :time 0 :bienvenides/name-index 0 :bienvenides/letter-index 0}
+            {:pitch 1 :duration 4 :time 2 :bienvenides/name-index 0 :bienvenides/letter-index 1}
+            {:pitch 2 :duration 4 :time 6 :bienvenides/name-index 0 :bienvenides/letter-index 2}]
+           (encoding/encode ["ABC"] {:duration {:vowel 2 :consonant 4}})))))

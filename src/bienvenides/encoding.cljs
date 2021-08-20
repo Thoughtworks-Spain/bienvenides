@@ -4,7 +4,7 @@
             [clojure.string :as str]
             [cljs.pprint :as pprint]))
 
-(defn encode-pitch [persons-name]
+(defn encode-pitch [persons-name _]
   (letfn [(index [c] (- (pprint/char-code c) (pprint/char-code \a)))]
     (->> persons-name
       (map index)
@@ -13,17 +13,17 @@
 (defn is-vowel? [letter]
   (#{\a \e \i \o \u} letter))
 
-(defn encode-one-duration [letter]
+(defn encode-one-duration [letter {:keys [duration]}]
   (if (is-vowel? letter)
-    1
-    0.5))
+    (:vowel duration 1)
+    (:consonant duration 0.5)))
 
-(defn encode-duration [persons-name]
-  (map encode-one-duration persons-name))
+(defn encode-duration [persons-name encoding-options]
+  (map #(encode-one-duration % encoding-options) persons-name))
 
-(defn encode-one [persons-name]
-  (let [pitches (encode-pitch persons-name)
-        durations (encode-duration persons-name)]
+(defn encode-one [persons-name encoding-options]
+  (let [pitches (encode-pitch persons-name encoding-options)
+        durations (encode-duration persons-name encoding-options)]
     (melody/phrase durations pitches)))
 
 (defn set-indexes
@@ -40,7 +40,7 @@
 (defn encode [names encoding-options]
   (->> names
        (map str/lower-case)
-       (map encode-one)
+       (map #(encode-one % encoding-options))
        (map #(->> %2 (melody/where :pitch (scale/from (* 5 %1)))) (range))
        (map-indexed set-indexes)
        (reduce melody/with)))
