@@ -37,7 +37,7 @@
             :bienvenides/letter-index letter-index))
    encoded-name))
 
-(defn encode [names]
+(defn encode [names encoding-options]
   (->> names
        (map str/lower-case)
        (map encode-one)

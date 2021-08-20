@@ -39,7 +39,7 @@
 (re-frame/reg-fx :play play-fx)
 
 (defn play [cofx [_ names]]
-  {:play {:notes (encoding/encode names)
+  {:play {:notes (encoding/encode names (some-> cofx :db :encoding-options))
           :audio-context (-> cofx :db :audio-context)
           :play-options (some-> cofx :db :play-options)}})
 

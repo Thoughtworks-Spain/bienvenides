@@ -3,7 +3,8 @@
     [cljs.test :refer [deftest is testing]]
     [bienvenides.events :as events]
     [bienvenides.test-utils :as tu]
-    [bienvenides.synth :as synth]))
+    [bienvenides.synth :as synth]
+    [bienvenides.encoding :as encoding]))
 
 (deftest initializes-audio-context
   (is (= :foo
@@ -24,6 +25,7 @@
       (is (ifn? (-> play tu/get-calls first (get 2) :register-note!))))))
 
 (deftest play
+
   (testing "Plays the name"
     (is (= {:play {:notes [{:pitch 0 :time 0 :duration 1 :bienvenides/name-index 0 :bienvenides/letter-index 0}
                            {:pitch 2 :time 1 :duration 0.5 :bienvenides/name-index 0 :bienvenides/letter-index 1}
@@ -32,7 +34,25 @@
                    :play-options {:beats 120}}}
            (events/play {:db {:audio-context 'TheContext
                               :play-options {:beats 120}}}
-                        [::events/play ["Ace"]])))))
+                        [::events/play ["Ace"]]))))
+
+  (testing "Passes encoding-options from db"
+    (let [names ["A"]
+          encoding-options {:duration {:vowel 1
+                                       :consonant 2}}
+          db {:encoding-options encoding-options
+              :audio-context ::audio-context}
+          cofx {:db db}
+          event [::events/play ["A"]]
+          encode-stub (tu/new-stub {:fn #(do ::encoded)})]
+      (with-redefs [encoding/encode encode-stub]
+        (let [result (events/play cofx event)]
+          (is (= {:play {:notes ::encoded
+                         :audio-context ::audio-context
+                         :play-options nil}}
+                 result))
+          (is (= [[names encoding-options]]
+                 (tu/get-calls encode-stub))))))))
 
 (deftest test-new-routing-match
   (is (= {:db {::foo 1
