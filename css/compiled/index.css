@@ -105,6 +105,11 @@
 }
 .main-panel__control-dashboard {
   text-align: left;
+  margin-bottom: 50px;
+  margin-top: 40px;
+}
+.main-panel__dashboard-input-wrapper {
+  margin-right: 10px;
 }
 
 html {
@@ -119,6 +124,11 @@ body {
   line-height: 1.2;
   margin: 0;
   padding: 0;
+}
+
+#app {
+  max-width: 1200px;
+  margin: auto;
 }
 
 /*# sourceMappingURL=index.css.map */
