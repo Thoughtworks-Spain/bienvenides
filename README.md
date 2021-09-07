@@ -8,7 +8,7 @@ It's built with [ClojureScript](https://clojurescript.org/) and [re-frame](https
 
 ### Using the app
 
-The app turns a name into a musical signature.(https://thoughtworks-spain.github.io/bienvenides/#/url-generator).
+The app turns a name into a musical signature.
 
 To use it:
 - Go to the [URL generation page](https://thoughtworks-spain.github.io/bienvenides/#/url-generator) and enter your full name.
