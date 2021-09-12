@@ -70,7 +70,7 @@
 }
 .button {
   display: inline-block;
-  background-color: #e16a7c;
+  background-color: #f2617a;
   color: #fff;
   font-size: 1rem;
   font-weight: 630;
@@ -84,7 +84,7 @@
   background-color: #bd4257 !important;
 }
 .button:disabled {
-  background-color: #e16a7c !important;
+  background-color: #f2617a !important;
   cursor: not-allowed;
 }
 
@@ -101,7 +101,7 @@
 .main-panel__letter--active {
   display: inline-block;
   transform: translateY(-5px);
-  color: blue;
+  color: #cc850a;
 }
 .main-panel__control-dashboard {
   text-align: left;
@@ -124,6 +124,7 @@ body {
   line-height: 1.2;
   margin: 0;
   padding: 0;
+  color: #666666;
 }
 
 #app {
