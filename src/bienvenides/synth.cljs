@@ -12,8 +12,9 @@
 
 (defn ping [freq]
   (cljb/connect->
-    (cljb/square freq)
-    (cljb/percussive 0.01 1.4)
+    (cljb/triangle freq)
+    (cljb/percussive 0.01 1.2)
+    (cljb/enhance cljb/reverb 0.7)
     (cljb/gain 0.1)))
 
 (def bass
