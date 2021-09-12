@@ -55,7 +55,7 @@
 (defn main-panel [props]
   "The main app entrypoint, which gives a warm welcome to the user :)"
   [main-panel-core {:names (or (some-> props :routing-match :query-params :name utils/parse-names)
-                               ["Anom"])
+                               ["Anon"])
                     :current-notes @(re-frame/subscribe [::subs/current-notes])
                     :play-options @(re-frame/subscribe [::subs/play-options])}])
 
