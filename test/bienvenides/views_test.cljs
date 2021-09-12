@@ -34,7 +34,7 @@
                  [:span {:key "12r" :class sut/letter-class} "r"]]]]]
              (sut/main-panel-name {:names names :current-notes current-notes})))))
 
-  (testing "Renders notes with active class if they are active"
+  (testing "Renders notes with active class if they are active."
     (let [current-notes #{a-note}
           names ["Foo"]]
       (is (= [:span.main-panel__full-name
@@ -46,31 +46,27 @@
 
 (deftest test-main-panel
 
-  (testing "extracts query-param from routing match"
+  (testing "Extracts query-param from routing match."
     (let [routing-match {:query-params {:name "Foo Bar Baz"}}]
       (is (= [sut/main-panel-core {:names ["Foo" "Bar" "Baz"]
                                    :current-notes #{}
-                                   :play-options subs/DEFAULT_PLAY_OPTIONS
-                                   :encoding-options subs/DEFAULT_ENCODING_OPTIONS}]
+                                   :play-options subs/DEFAULT_PLAY_OPTIONS}]
              (sut/main-panel {:routing-match routing-match})))))
 
   (testing "Defaults name to Anom"
     (let [routing-match {}]
       (is (= [sut/main-panel-core {:names ["Anom"]
                                    :current-notes #{}
-                                   :play-options subs/DEFAULT_PLAY_OPTIONS
-                                   :encoding-options subs/DEFAULT_ENCODING_OPTIONS}]
+                                   :play-options subs/DEFAULT_PLAY_OPTIONS}]
              (sut/main-panel {:routing-match routing-match})))))
 
-  (testing "Uses subscription for current-notes, play-options and encoding-options"
+  (testing "Uses subscription for current-notes and play-options."
     (with-redefs [re-frame/subscribe (fn [[k]]
                                        (atom
                                         (case k
                                           ::subs/current-notes #{a-note}
-                                          ::subs/play-options {:beats 120}
-                                          ::subs/encoding-options {:duration {:vowell 1}})))]
+                                          ::subs/play-options {:beats 120})))]
       (is (= [sut/main-panel-core {:names ["Anom"]
                                    :current-notes #{a-note}
-                                   :play-options {:beats 120}
-                                   :encoding-options {:duration {:vowell 1}}}]
+                                   :play-options {:beats 120}}]
              (sut/main-panel {:routing-match nil}))))))

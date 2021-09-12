@@ -34,25 +34,7 @@
                    :play-options {:beats 120}}}
            (events/play {:db {:audio-context 'TheContext
                               :play-options {:beats 120}}}
-                        [::events/play ["Ace"]]))))
-
-  (testing "Passes encoding-options from db"
-    (let [names ["A"]
-          encoding-options {:duration {:vowel 1
-                                       :consonant 2}}
-          db {:encoding-options encoding-options
-              :audio-context ::audio-context}
-          cofx {:db db}
-          event [::events/play ["A"]]
-          encode-stub (tu/new-stub {:fn #(do ::encoded)})]
-      (with-redefs [encoding/encode encode-stub]
-        (let [result (events/play cofx event)]
-          (is (= {:play {:notes ::encoded
-                         :audio-context ::audio-context
-                         :play-options nil}}
-                 result))
-          (is (= [[names encoding-options]]
-                 (tu/get-calls encode-stub))))))))
+                        [::events/play ["Ace"]])))))
 
 (deftest test-new-routing-match
   (is (= {:db {::foo 1

@@ -39,7 +39,7 @@
 (re-frame/reg-fx :play play-fx)
 
 (defn play [cofx [_ names]]
-  {:play {:notes (encoding/encode names (some-> cofx :db :encoding-options))
+  {:play {:notes (encoding/encode names)
           :audio-context (-> cofx :db :audio-context)
           :play-options (some-> cofx :db :play-options)}})
 
@@ -65,14 +65,8 @@
   [{db :db} [_ play-options]]
   {:db (merge db {:play-options play-options})})
 
-(defn set-encoding-options
-  "Event used to set `encoding-options` on the db."
-  [{db :db} [_ encoding-options]]
-  {:db (merge db {:encoding-options encoding-options})})
-
 (re-frame/reg-event-fx ::play play)
 (re-frame/reg-event-fx ::new-routing-match new-routing-match)
 (re-frame/reg-event-fx ::note-started-playing note-started-playing)
 (re-frame/reg-event-fx ::note-stopped-playing note-stopped-playing)
 (re-frame/reg-event-fx ::set-play-options set-play-options)
-(re-frame/reg-event-fx ::set-encoding-options set-encoding-options)

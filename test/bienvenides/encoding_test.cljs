@@ -7,19 +7,19 @@
 
   (testing "Initializes to empty"
     (is (= []
-           (encoding/encode [] {}))))
+           (encoding/encode []))))
 
   (testing "Starts at a"
     (is (= [{:pitch 0 :duration 1 :time 0 :bienvenides/name-index 0 :bienvenides/letter-index 0}
             {:pitch 1 :duration 0.5 :time 1 :bienvenides/name-index 0 :bienvenides/letter-index 1}
             {:pitch 2 :duration 0.5 :time 1.5 :bienvenides/name-index 0 :bienvenides/letter-index 2}]
-           (encoding/encode ["abc"] {}))))
+           (encoding/encode ["abc"]))))
 
   (testing "Cycles around at f"
     (is (= [{:pitch 4 :duration 1 :time 0 :bienvenides/name-index 0 :bienvenides/letter-index 0}
             {:pitch 0 :duration 0.5 :time 1 :bienvenides/name-index 0 :bienvenides/letter-index 1}
             {:pitch 1 :duration 0.5 :time 1.5 :bienvenides/name-index 0 :bienvenides/letter-index 2}]
-           (encoding/encode ["efg"] {}))))
+           (encoding/encode ["efg"]))))
 
   (testing "Treats multiple words as multiple parts in increasing octaves"
     (is (= [{:pitch 0 :duration 1 :time 0 :bienvenides/name-index 0 :bienvenides/letter-index 0} ; a
@@ -27,16 +27,10 @@
 
             {:pitch 8 :duration 0.5 :time 0.5 :bienvenides/name-index 1 :bienvenides/letter-index 1} ; d
             {:pitch 1 :duration 0.5 :time 1 :bienvenides/name-index 0 :bienvenides/letter-index 1}] ; b
-           (encoding/encode ["ab" "cd"] {}))))
+           (encoding/encode ["ab" "cd"]))))
 
   (testing "Treats uppercase the same as lowercase"
     (is (= [{:pitch 0 :duration 1 :time 0 :bienvenides/name-index 0 :bienvenides/letter-index 0}
             {:pitch 1 :duration 0.5 :time 1 :bienvenides/name-index 0 :bienvenides/letter-index 1}
             {:pitch 2 :duration 0.5 :time 1.5 :bienvenides/name-index 0 :bienvenides/letter-index 2}]
-           (encoding/encode ["ABC"] {}))))
-
-  (testing "Changes duration of vowels and consonants depending on encoding-options"
-    (is (= [{:pitch 0 :duration 2 :time 0 :bienvenides/name-index 0 :bienvenides/letter-index 0}
-            {:pitch 1 :duration 4 :time 2 :bienvenides/name-index 0 :bienvenides/letter-index 1}
-            {:pitch 2 :duration 4 :time 6 :bienvenides/name-index 0 :bienvenides/letter-index 2}]
-           (encoding/encode ["ABC"] {:duration {:vowel 2 :consonant 4}})))))
+           (encoding/encode ["ABC"])))))
