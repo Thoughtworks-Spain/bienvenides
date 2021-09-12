@@ -1,6 +1,6 @@
 .button {
     display: inline-block;
-    background-color: #e16a7c;
+    background-color: #f2617a;
     color: #fff;
     font-size: 1rem;
     font-weight: 630;
@@ -15,7 +15,7 @@
     }
 
     &:disabled {
-        background-color: #e16a7c !important;
+        background-color: #f2617a !important;
         cursor: not-allowed;
     }
 }
