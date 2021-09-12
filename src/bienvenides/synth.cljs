@@ -13,13 +13,21 @@
 (defn ping [freq]
   (cljb/connect->
     (cljb/triangle freq)
-    (cljb/percussive 0.01 1.2)
+    (cljb/percussive 0.005 1.2)
     (cljb/enhance cljb/reverb 0.7)
     (cljb/gain 0.1)))
 
+(defn pong [freq]
+  (cljb/connect->
+    (cljb/triangle freq)
+    (cljb/adshr 0.01 0.2 0.4 0.8 0.3)
+    (cljb/enhance cljb/reverb 0.2)
+    (cljb/gain 0.05)))
+
 (def bass
   (->> (melody/phrase [2 2 4] [0 -1 -2])
-       (melody/where :pitch (scale/from -5))))
+       (melody/where :pitch (scale/from -5))
+       (melody/all :part :bass)))
 
 (defn arrange
   ([notes] (arrange notes {}))
@@ -42,9 +50,12 @@
   ([notes audio-context] (play notes audio-context {}))
   ([notes audio-context {:keys [register-note! beats]
                          :as options}]
-   (doseq [{:keys [pitch time duration] :as note} (arrange notes {:beats beats})]
+   (doseq [{:keys [pitch time duration part] :as note} (arrange notes {:beats beats})]
      (let [connected (cljb/connect-> (ping pitch) cljb/destination)
+           connected-bass (cljb/connect-> (pong pitch) cljb/destination)
            at (+ time (cljb/current-time audio-context))]
-       (cljb/run-with connected audio-context at duration)
+       (if (= part :bass)
+         (cljb/run-with connected-bass audio-context at duration)
+         (cljb/run-with connected audio-context at duration))
        (when register-note!
          (register-note! note))))))
