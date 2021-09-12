@@ -38,9 +38,8 @@
                   play-options' (merge play-options {:beats beats})]
               (re-frame/dispatch [::events/set-play-options play-options'])))]
     [:input {:type "number"
-             :min 10
-             :max 999
-             :maxlength 3 ; For browsers that don't know type number
+             :min 10 :max 999     ; For browsers that recognise type number.
+             :size 3 :maxlength 3 ; For browsers that don't recognise type number.
              :on-change on-change
              :value (:beats play-options)}]))
 
