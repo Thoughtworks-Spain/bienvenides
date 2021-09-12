@@ -14,14 +14,12 @@
   (cljb/connect->
     (cljb/triangle freq)
     (cljb/percussive 0.005 1.2)
-    (cljb/enhance cljb/reverb 0.7)
     (cljb/gain 0.1)))
 
 (defn pong [freq]
   (cljb/connect->
     (cljb/triangle freq)
     (cljb/adshr 0.01 0.2 0.4 0.8 0.3)
-    (cljb/enhance cljb/reverb 0.2)
     (cljb/gain 0.05)))
 
 (def bass
