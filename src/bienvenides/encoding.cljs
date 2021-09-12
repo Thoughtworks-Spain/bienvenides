@@ -41,6 +41,6 @@
   (->> names
        (map str/lower-case)
        (map encode-one)
-       (map #(->> %2 (melody/where :pitch (scale/from (* 5 %1)))) (range))
+       (map-indexed #(->> %2 (melody/where :pitch (scale/from (* 5 %1)))))
        (map-indexed set-indexes)
        (reduce melody/with)))
