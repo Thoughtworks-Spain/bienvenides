@@ -30,8 +30,8 @@
         (for [[letter-index letter] (map vector (range) name)]
           (render-letter name-index letter-index letter))])]))
 
-(defn main-panel-beats-input
-  "An input to control the beats of the song."
+(defn main-panel-bpm-input
+  "An input to control the speed of the song."
   [{:keys [play-options]}]
   (letfn [(on-change [event]
             (let [beats (-> event .-target .-value)
@@ -66,8 +66,8 @@
     [main-panel-name {:names names :current-notes current-notes}]]
    [:div.main-panel__control-dashboard
     [:span.main-panel__dashboard-input-wrapper
-     [:span "Beats: "]
-     [main-panel-beats-input {:play-options play-options}]]
+     [:span "Beats per minute: "]
+     [main-panel-bpm-input {:play-options play-options}]]
     [main-panel-duration-input {:encoding-options encoding-options}]]
    [:button.button {:on-click #(re-frame/dispatch [::events/play names])
                     :disabled (not (empty? current-notes))} "Play"]])
