@@ -7,7 +7,7 @@
    [bienvenides.views :as views]))
 
 (def routes
-  "All routes avaiable in the app, used by reitit to match."
+  "All routes available in the app, used by reitit to match."
   [["/"
     {:name "Main Panel"
      :view views/main-panel}]
