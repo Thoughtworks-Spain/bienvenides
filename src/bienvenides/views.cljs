@@ -47,8 +47,8 @@
     [main-panel-name {:names names :current-notes current-notes}]]
    [:div.main-panel__control-dashboard
     [:span.main-panel__dashboard-input-wrapper
-     [:span "Speed:"]
-     [main-panel-bpm-input {:play-options play-options}]]]
+     [:label "Speed:"
+      [main-panel-bpm-input {:play-options play-options}]]]]
    [:button.button {:on-click #(re-frame/dispatch [::events/play names])
                     :disabled (not (empty? current-notes))} "Play"]])
 
