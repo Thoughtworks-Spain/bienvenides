@@ -53,9 +53,9 @@
                                    :play-options subs/DEFAULT_PLAY_OPTIONS}]
              (sut/main-panel {:routing-match routing-match})))))
 
-  (testing "Defaults name to Anom"
+  (testing "Defaults name to Anon"
     (let [routing-match {}]
-      (is (= [sut/main-panel-core {:names ["Anom"]
+      (is (= [sut/main-panel-core {:names ["Anon"]
                                    :current-notes #{}
                                    :play-options subs/DEFAULT_PLAY_OPTIONS}]
              (sut/main-panel {:routing-match routing-match})))))
@@ -66,7 +66,7 @@
                                         (case k
                                           ::subs/current-notes #{a-note}
                                           ::subs/play-options {:beats 120})))]
-      (is (= [sut/main-panel-core {:names ["Anom"]
+      (is (= [sut/main-panel-core {:names ["Anon"]
                                    :current-notes #{a-note}
                                    :play-options {:beats 120}}]
              (sut/main-panel {:routing-match nil}))))))
